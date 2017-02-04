@@ -9,7 +9,7 @@
 import UIKit
 import os.log
 
-class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
     
     //MARK: Properties
     @IBOutlet weak var nameTextField: UITextField!
@@ -30,13 +30,20 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
     var location = CGPoint(x: 0, y: 0)
     
     var meal: Meal?
+    var pickerOption = ["size: 71x51 price: $4200", "size: 54x40 price: $3400", "size: 52x24 price: $2400", "size: 35x43 price: $2600", "size: 24x28 price: $1200"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Handle the text field’s user input through delegate callbacks.
+        
         nameTextField.delegate = self
-        size.delegate = self
+        
+        //size.delegate = self
+        
+        let pickerView = UIPickerView()
+        pickerView.delegate = self
+        size.inputView = pickerView
         
         // Set up views if editing an existing Meal.
         if let meal = meal {
@@ -59,6 +66,25 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         
         // Enable the Save button only if the text field has a valid Meal name.
         updateSaveButtonState()
+    }
+    
+    //MARK: PickerViewDelegate
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerOption.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return pickerOption[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        size.text = pickerOption[row]
+        size.resignFirstResponder()
     }
     
     //MARK: UITextFieldDelegate
