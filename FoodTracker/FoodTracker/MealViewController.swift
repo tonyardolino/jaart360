@@ -54,6 +54,7 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         //view.addSubview(scrollView)
         //print("viewDidLoad photoImageview.image.size: \(photoImageView.image?.size)")
         
+        
         print("viewDidLoad photoImageView.frame.width: \(photoImageView.frame.width) height: \(photoImageView.frame.height) view h: \(view.frame.height) w: \(view.frame.width) scrollview.frame h: \(scrollView.frame.height) w: \(scrollView.frame.width)")
         
         // Enable the Save button only if the text field has a valid Meal name.
