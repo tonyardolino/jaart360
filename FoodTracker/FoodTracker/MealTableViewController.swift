@@ -98,7 +98,7 @@ class MealTableViewController: UITableViewController {
         if editingStyle == .delete {
             // Delete the row from the data source
             meals.remove(at: indexPath.row)
-            saveMeals()
+            //saveMeals()
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -161,22 +161,32 @@ class MealTableViewController: UITableViewController {
     @IBAction func unwindToMealList(sender: UIStoryboardSegue) {
         if let sourceViewController = sender.source as? MealViewController, let meal = sourceViewController.meal {
             
-            if let selectedIndexPath = tableView.indexPathForSelectedRow {
-                // Update an existing meal.
-                meals[selectedIndexPath.row] = meal
-                tableView.reloadRows(at: [selectedIndexPath], with: .none)
-            }
-            else {
-                // Add a new meal.
-                let newIndexPath = IndexPath(row: meals.count, section: 0)
+            //print("unwindToMealList sourceViewController.scrollView: \(sourceViewController.scrollView) sourceViewController.photoImageView: \(sourceViewController.photoImageView) sourceViewController.photoImageView?.subviews.first: \(sourceViewController.photoImageView?.subviews.first)")
+            
+            if (sourceViewController.photoImageView?.subviews.first != nil){
+                UIGraphicsBeginImageContext((sourceViewController.photoImageView.image?.size)!)
+                sourceViewController.photoImageView.layer.render(in: UIGraphicsGetCurrentContext()!)
+                meal.photo = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
                 
-                meals.append(meal)
-                tableView.insertRows(at: [newIndexPath], with: .automatic)
+                saveScenes(meal: meal)
+                
+            } else { if let selectedIndexPath = tableView.indexPathForSelectedRow {
+                        // Update an existing meal.
+                        meals[selectedIndexPath.row] = meal
+                        tableView.reloadRows(at: [selectedIndexPath], with: .none)
+                    } else {
+                        // Add a new meal.
+                        let newIndexPath = IndexPath(row: meals.count, section: 0)
+                
+                        meals.append(meal)
+                        tableView.insertRows(at: [newIndexPath], with: .automatic)
+                        saveMeals(meal: meal)
+                }
             }
             
             // Save the meals.
-            saveMeals()
-        }
+            }
     }
     
     //MARK: Private Methods
@@ -202,9 +212,9 @@ class MealTableViewController: UITableViewController {
         meals += [meal1, meal2, meal3]
     }
     
-    private func saveMeals() {
-        print("saveMeals() called")
-        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(meals, toFile: Meal.ArchiveURL.path)
+    private func saveMeals(meal: Meal) {
+        //print("saveMeals() called meal \(meal)")
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(meal, toFile: Meal.ArchiveURL.path)
         print("saveMeals completed \(isSuccessfulSave)")
         if isSuccessfulSave {
             print("Meals successfully saved.")
@@ -214,15 +224,17 @@ class MealTableViewController: UITableViewController {
             //os_log("Failed to save meals...", log: OSLog.default, type: .error)
             
         }
-        /*
-         let name = meals.last?.name
-         let rating = meals.last?.rating
-         let Image: UIImage = (meals.last?.photo)!
+        
+         let name = meal.name
+         let rating = meal.rating
+         let Image: UIImage = (meal.photo)!
+         let size = meal.size
+        
          
          
          let DocumentDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
          let tempURL = DocumentDirectory.appendingPathComponent("temp")
-         let data = UIImageJPEGRepresentation(Image, 10)!
+         let data = UIImageJPEGRepresentation(Image, 1.0)!
          do {
          try data.write(to: tempURL)
          }
@@ -232,22 +244,78 @@ class MealTableViewController: UITableViewController {
          let asset = CKAsset(fileURL: tempURL)
          
          
-         let artworkRecordID: CKRecordID = CKRecordID.init(recordName: name!)
+         let artworkRecordID: CKRecordID = CKRecordID.init(recordName: name)
          let artworkRecord: CKRecord = CKRecord.init(recordType: "Artwork", recordID: artworkRecordID)
-         artworkRecord["title"] = name! as CKRecordValue
+         artworkRecord["title"] = name as CKRecordValue
          artworkRecord["artist"] = "Jennifer Ardolino" as CKRecordValue
          artworkRecord["address"] =  "Homosassa, Florida" as CKRecordValue
-         artworkRecord["rating"] = rating! as CKRecordValue
+         artworkRecord["rating"] = rating as CKRecordValue
          artworkRecord["image"] = asset
+         artworkRecord["Size"] = size as CKRecordValue?
          
          let myContainer: CKContainer = CKContainer.default()
          let publicDatabase: CKDatabase = myContainer.publicCloudDatabase
          
          publicDatabase.save(artworkRecord) { savedRecord, error in
          }
-         */
+        
         
     }
+    
+    private func saveScenes(meal: Meal) {
+        //print("saveMeals() called meal \(meal)")
+        //var username = UIDevice.current.name
+        //var uuid = UIDevice.current.identifierForVendor
+        UIImageWriteToSavedPhotosAlbum(meal.photo!, nil, nil, nil)
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(meal, toFile: Meal.scenesURL.path)
+        print("saveScenes completed \(isSuccessfulSave)")
+        if isSuccessfulSave {
+            print("Scene successfully saved.")
+            //os_log("Meals successfully saved.", log: OSLog.default, type: .debug)
+        } else {
+            print("Failed to save meals...")
+            //os_log("Failed to save meals...", log: OSLog.default, type: .error)
+            
+        }
+        
+        let name = meal.name
+        let rating = meal.rating
+        let Image: UIImage = (meal.photo)!
+        let size = meal.size
+        
+        
+        
+        let DocumentDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
+        let tempURL = DocumentDirectory.appendingPathComponent("temp")
+        let data = UIImageJPEGRepresentation(Image, 1.0)!
+        do {
+            try data.write(to: tempURL)
+        }
+        catch {
+            os_log("Failed to save temp...", log: OSLog.default, type: .error)
+        }
+        let asset = CKAsset(fileURL: tempURL)
+        
+        
+        let sceneRecordID: CKRecordID = CKRecordID.init(recordName: name)
+        let sceneRecord: CKRecord = CKRecord.init(recordType: "Scenes", recordID: sceneRecordID)
+        sceneRecord["title"] = name as CKRecordValue
+        sceneRecord["artist"] = "Jennifer Ardolino" as CKRecordValue
+        sceneRecord["address"] =  "Homosassa, Florida" as CKRecordValue
+        sceneRecord["rating"] = rating as CKRecordValue
+        sceneRecord["image"] = asset
+        sceneRecord["Size"] = size as CKRecordValue?
+        
+        let myContainer: CKContainer = CKContainer.default()
+        let publicDatabase: CKDatabase = myContainer.publicCloudDatabase
+        
+        publicDatabase.save(sceneRecord) { savedRecord, error in
+            if((error) != nil) { print("saveScene database error: \(error)")}
+        }
+        
+        
+    }
+
     
     private func loadMeals() -> [Meal]?  {
         return NSKeyedUnarchiver.unarchiveObject(withFile: Meal.ArchiveURL.path) as? [Meal]

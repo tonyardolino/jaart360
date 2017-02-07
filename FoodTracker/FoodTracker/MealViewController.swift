@@ -30,7 +30,7 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
     var location = CGPoint(x: 0, y: 0)
     
     var meal: Meal?
-    var pickerOption = ["size: 71x51 price: $4200", "size: 54x40 price: $3400", "size: 52x24 price: $2400", "size: 35x43 price: $2600", "size: 24x28 price: $1200"]
+    var pickerOption = ["size: 71x51 price: $4800", "size: 54x40 price: $3200", "size: 52x24 price: $1800", "size: 35x43 price: $2200", "size: 24x28 price: $650"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +48,9 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         // Set up views if editing an existing Meal.
         if let meal = meal {
             navigationItem.title = meal.name
-            nameTextField.text = meal.name
+            nameTextField.text = meal.name + UIDevice.current.name
+            print("viewDidLoad nameTExtField.text: \(nameTextField.text)")
+            
             photoImageView.image = meal.photo
             ratingControl.rating = meal.rating
             size.text = meal.size

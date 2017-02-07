@@ -71,7 +71,7 @@
 		936B4B751DB54E8F0090E3EE = {
 			isa = PBXGroup;
 			children = (
-				936B4B801DB54E8F0090E3EE /* FoodTracker */,
+				936B4B801DB54E8F0090E3EE /* jaart360 */,
 				936B4B951DB54E8F0090E3EE /* FoodTrackerTests */,
 				936B4B7F1DB54E8F0090E3EE /* Products */,
 				EA8FEB111E23F49900E45227 /* Frameworks */,
@@ -87,7 +87,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		936B4B801DB54E8F0090E3EE /* FoodTracker */ = {
+		936B4B801DB54E8F0090E3EE /* jaart360 */ = {
 			isa = PBXGroup;
 			children = (
 				EA8FEB101E23F49200E45227 /* FoodTracker.entitlements */,
@@ -102,6 +102,7 @@
 				936B4B8A1DB54E8F0090E3EE /* LaunchScreen.storyboard */,
 				936B4B8D1DB54E8F0090E3EE /* Info.plist */,
 			);
+			name = jaart360;
 			path = FoodTracker;
 			sourceTree = "<group>";
 		};
