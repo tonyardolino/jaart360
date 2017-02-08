@@ -46,10 +46,21 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         size.inputView = pickerView
         
         // Set up views if editing an existing Meal.
+        //get user name
+        var uname = UIDevice.current.name
+        let ap = uname.characters.index(of: "\'")!
+        uname = String(uname.characters.prefix(upTo: ap))
+        
         if let meal = meal {
             navigationItem.title = meal.name
-            nameTextField.text = meal.name + UIDevice.current.name
-            print("viewDidLoad nameTExtField.text: \(nameTextField.text)")
+            let dash = meal.name.characters.index(of: "-")
+            //print("viewDidLoad dash: \(dash)")
+            if (dash == nil) {
+                nameTextField.text = meal.name + "-" + uname
+            } else {
+                nameTextField.text = meal.name
+            }
+            //print("viewDidLoad nameTextField.text: \(nameTextField.text)")
             
             photoImageView.image = meal.photo
             ratingControl.rating = meal.rating
