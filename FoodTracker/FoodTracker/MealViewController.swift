@@ -18,6 +18,7 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var size: UITextField!
+    @IBOutlet weak var ceilTextField: UITextField!
     @IBOutlet weak var imageViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageViewTopConstraint: NSLayoutConstraint!
@@ -30,7 +31,10 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
     var location = CGPoint(x: 0, y: 0)
     
     var meal: Meal?
+    
     var pickerOption = ["size: 71x51 price: $4800", "size: 54x40 price: $3200", "size: 52x24 price: $1800", "size: 35x43 price: $2200", "size: 24x28 price: $650"]
+    
+    var ceilpickerOption = ["8", "10", "12", "14", "16", "18", "20", "22"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,12 +42,20 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         // Handle the text field’s user input through delegate callbacks.
         
         nameTextField.delegate = self
+        ceilTextField.delegate = self
         
         //size.delegate = self
         
         let pickerView = UIPickerView()
         pickerView.delegate = self
+        pickerView.tag = 1
         size.inputView = pickerView
+        
+        let ceilpickerView = UIPickerView()
+        ceilpickerView.delegate = self
+        ceilpickerView.tag = 2
+        ceilTextField.inputView = ceilpickerView
+        ceilTextField.text = ceilpickerOption[1]
         
         // Set up views if editing an existing Meal.
         //get user name
@@ -83,21 +95,34 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
     
     //MARK: PickerViewDelegate
     
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in _: UIPickerView) -> Int {
         return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerOption.count
+        if (pickerView.tag == 1){
+            return pickerOption.count
+        }
+        return ceilpickerOption.count
+    
+        
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return pickerOption[row]
+        if (pickerView.tag == 1){
+            return pickerOption[row]
+        }
+        return ceilpickerOption[row]
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        size.text = pickerOption[row]
-        size.resignFirstResponder()
+        if (pickerView.tag == 1 ) {
+            size.text = pickerOption[row]
+            size.resignFirstResponder()
+        } else if (pickerView.tag == 2){
+            ceilTextField.text = ceilpickerOption[row]
+            ceilTextField.resignFirstResponder()
+        }
     }
     
     //MARK: UITextFieldDelegate
@@ -142,15 +167,46 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         
         //imageView.frame = CGRect(x: 186, y: 240, width: 100, height: 200)
         //imageView.center = photoImageView.center
-        imageView.frame = CGRect(x: 687, y: 1516, width: 1650, height: 1000)
-        //imageView.addSubview(self.view)
+        //let ap = uname.characters.index(of: "\'")!
+        //uname = String(uname.characters.prefix(upTo: ap))
+        
+        var string: String = size.text!
+        let start = string.characters.index(of: "x")
+        //let end = string.characters.index(after: start!)
+        //let x1 = string.characters.index(start!, offsetBy: -2)
+        //let x2 = string.characters.index(start!, offsetBy: -1)
+        let x3 = string.characters.index(start!, offsetBy: 1)
+        //let x4 = string.characters.index(start!, offsetBy: 2)
+
+        var artHeight = string.substring(from: x3)
+        var artWidth = string.substring(to: start!)
+        var artworkHeight = Float(artHeight)
+        artworkHeight = artworkHeight! / 12
+        var artworkWidth = Float(artWidth)
+        artworkWidth = artworkWidth! / 12
+        var aspectRatio = artworkWidth! / artworkHeight!
+        
+    
+        
+        print("imagePickerController  artWidth: \(artWidth) artHeight: \(artHeight)  height: \(artworkHeight) ")
+         //imageView.addSubview(self.view)
         photoImageView.image = selectedImage
         photoImageView.bounds.size = (photoImageView.image?.size)!
+        
+        var ceilingHeight = Float(ceilTextField.text!)
+        var ptft: Float = Float((photoImageView.image?.size.height)!) / ceilingHeight!
+        var height1 = Float(ptft * artworkHeight!)
+    
+        //let width = Int(ptft * artworkWidth!)
+        let width = Int(aspectRatio * height1)
+        var height = Int(height1)
+        
+        imageView.frame = CGRect(x: 687, y: 1516, width: width, height: height)
         
         photoImageView.addSubview(imageView)
         
         
-        print("imagePickerController photoImageview.image.size: \(photoImageView.image?.size) imageView.size: \(imageView.image?.size)")
+        print("imagePickerController photoImageview.image.size: \(photoImageView.image?.size) imageView.frame.size: \(imageView.frame.size)")
         
         //print("imagePickerController photoImageView.center: \(photoImageView.center) photoImageView.subview[0].center: \(photoImageView.subviews[0].center)")
         

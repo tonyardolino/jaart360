@@ -153,6 +153,24 @@
                                             <action selector="selectImageFromCamera:" destination="BYZ-38-t0r" id="QfP-Yl-0gm"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" id="Nvo-Fa-RBm">
+                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Set Ceiling Height in Feet" textAlignment="natural" minimumFontSize="17" id="tIV-2L-5p8">
+                                            <rect key="frame" x="51" y="7" width="190" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                    </barButtonItem>
+                                    <barButtonItem title="Ceiling Height" style="plain" id="GDw-D5-4Vj">
+                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" id="7m9-Vx-7tW" userLabel="Ceiling height Text Field">
+                                            <rect key="frame" x="251" y="7" width="50" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -180,6 +198,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="ceilTextField" destination="7m9-Vx-7tW" id="Rem-x9-AuP"/>
                         <outlet property="imageViewBottomConstraint" destination="3BE-55-r1f" id="kPf-zi-nqI"/>
                         <outlet property="imageViewLeadingConstraint" destination="A79-ly-Qhw" id="tMj-ry-gyO"/>
                         <outlet property="imageViewTopConstraint" destination="UxD-nY-Lve" id="aNK-lh-dyT"/>
