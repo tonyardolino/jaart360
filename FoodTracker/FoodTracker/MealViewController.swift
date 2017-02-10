@@ -170,6 +170,8 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         //let ap = uname.characters.index(of: "\'")!
         //uname = String(uname.characters.prefix(upTo: ap))
         
+        //MARK: Scaling artwork to ceiling height
+        
         var string: String = size.text!
         let start = string.characters.index(of: "x")
         //let end = string.characters.index(after: start!)
@@ -178,13 +180,13 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         let x3 = string.characters.index(start!, offsetBy: 1)
         //let x4 = string.characters.index(start!, offsetBy: 2)
 
-        var artHeight = string.substring(from: x3)
-        var artWidth = string.substring(to: start!)
+        let artHeight = string.substring(from: x3)
+        let artWidth = string.substring(to: start!)
         var artworkHeight = Float(artHeight)
         artworkHeight = artworkHeight! / 12
         var artworkWidth = Float(artWidth)
         artworkWidth = artworkWidth! / 12
-        var aspectRatio = artworkWidth! / artworkHeight!
+        let aspectRatio = artworkWidth! / artworkHeight!
         
     
         
@@ -193,17 +195,18 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         photoImageView.image = selectedImage
         photoImageView.bounds.size = (photoImageView.image?.size)!
         
-        var ceilingHeight = Float(ceilTextField.text!)
-        var ptft: Float = Float((photoImageView.image?.size.height)!) / ceilingHeight!
-        var height1 = Float(ptft * artworkHeight!)
+        let ceilingHeight = Float(ceilTextField.text!)
+        let ptft: Float = Float((photoImageView.image?.size.height)!) / ceilingHeight!
+        let height1 = Float(ptft * artworkHeight!)
     
         //let width = Int(ptft * artworkWidth!)
         let width = Int(aspectRatio * height1)
-        var height = Int(height1)
+        let height = Int(height1)
         
         imageView.frame = CGRect(x: 687, y: 1516, width: width, height: height)
         
         photoImageView.addSubview(imageView)
+        
         
         
         print("imagePickerController photoImageview.image.size: \(photoImageView.image?.size) imageView.frame.size: \(imageView.frame.size)")
