@@ -32,7 +32,7 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
     
     var meal: Meal?
     
-    var pickerOption = ["size: 71x51 price: $4800", "size: 54x40 price: $3200", "size: 52x24 price: $1800", "size: 35x43 price: $2200", "size: 24x28 price: $650"]
+    var pickerOption = ["71x51", "54x40", "52x24", "35x43", "24x28"]
     
     var ceilpickerOption = ["8", "10", "12", "14", "16", "18", "20", "22"]
     
@@ -157,38 +157,50 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
             fatalError("Expected a dictionary containing an image, but was provided the following: \(info)")
         }
         
-        // Set photoImageView to display the selected image.
-        //print("imagePickerController selectedImage.size: \(selectedImage.size)")
-        //selectedImage.contentMode = UIViewContentModeScaleAspectFit
-        //let imageView = UIImageView(image: selectedImage)
-        let imageView = UIImageView(image: photoImageView.image)
-        imageView.contentMode = UIViewContentMode.scaleAspectFit
-        imageView.bounds.size = (photoImageView.image?.size)!
+        //MARK: Test to see if we have artwork
+        if ((photoImageView.frame.width > 1.0) && (photoImageView.frame.width > 1.0)){
+             print("Existing Artwork")
+            //we already have an artwork Image so we add it scaled to the subview we add NEW Artwork
+            
         
-        //imageView.frame = CGRect(x: 186, y: 240, width: 100, height: 200)
-        //imageView.center = photoImageView.center
-        //let ap = uname.characters.index(of: "\'")!
-        //uname = String(uname.characters.prefix(upTo: ap))
+            // Set photoImageView to display the selected image.
+            //print("imagePickerController selectedImage.size: \(selectedImage.size)")
+            //selectedImage.contentMode = UIViewContentModeScaleAspectFit
+            //let imageView = UIImageView(image: selectedImage)
+            let imageView = UIImageView(image: photoImageView.image)
+            imageView.contentMode = UIViewContentMode.scaleAspectFit
+            imageView.bounds.size = (photoImageView.image?.size)!
         
-        //MARK: Scaling artwork to ceiling height
+            //imageView.frame = CGRect(x: 186, y: 240, width: 100, height: 200)
+            //imageView.center = photoImageView.center
+            //let ap = uname.characters.index(of: "\'")!
+            //uname = String(uname.characters.prefix(upTo: ap))
         
-        var string: String = size.text!
-        let start = string.characters.index(of: "x")
-        //let end = string.characters.index(after: start!)
-        //let x1 = string.characters.index(start!, offsetBy: -2)
-        //let x2 = string.characters.index(start!, offsetBy: -1)
-        let x3 = string.characters.index(start!, offsetBy: 1)
-        //let x4 = string.characters.index(start!, offsetBy: 2)
+            //MARK: Scaling artwork to ceiling height
+        
+            var string: String = size.text!
+            let start = string.characters.index(of: "x")
+            //let end = string.characters.index(after: start!)
+            //let x1 = string.characters.index(start!, offsetBy: -2)
+            //let x2 = string.characters.index(start!, offsetBy: -1)
+            let x3 = string.characters.index(start!, offsetBy: 1)
+            //let x4 = string.characters.index(start!, offsetBy: 2)
 
-        let artHeight = string.substring(from: x3)
-        let artWidth = string.substring(to: start!)
-        var artworkHeight = Float(artHeight)
-        artworkHeight = artworkHeight! / 12
-        var artworkWidth = Float(artWidth)
-        artworkWidth = artworkWidth! / 12
-        let aspectRatio = artworkWidth! / artworkHeight!
+            let artHeight = string.substring(from: x3)
+            let artWidth = string.substring(to: start!)
+            var artworkHeight = Float(artHeight)
+            artworkHeight = artworkHeight! / 12
+            var artworkWidth = Float(artWidth)
+            artworkWidth = artworkWidth! / 12
+            let aspectRatio = artworkWidth! / artworkHeight!
         
-    
+            //Check if artwork is rotated
+            if((Int(artworkWidth!) > Int(artworkHeight!)) && ( Int((imageView.image?.size.width)!) < Int((imageView.image?.size.height)!))) {
+            let wt = artworkHeight
+            artworkHeight = artworkWidth
+            artworkWidth = wt
+        
+            }
         
         print("imagePickerController  artWidth: \(artWidth) artHeight: \(artHeight)  height: \(artworkHeight) ")
          //imageView.addSubview(self.view)
@@ -206,11 +218,21 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         imageView.frame = CGRect(x: 687, y: 1516, width: width, height: height)
         
         photoImageView.addSubview(imageView)
-        
-        
-        
+           
         print("imagePickerController photoImageview.image.size: \(photoImageView.image?.size) imageView.frame.size: \(imageView.frame.size)")
+            
+        }else {
+            //This is ADD NEW ArtWork
+            print("NewArtWork")
+            photoImageView.image = selectedImage
+            photoImageView.bounds.size = (photoImageView.image?.size)!
+            
+        }
         
+        
+        
+        
+       
         //print("imagePickerController photoImageView.center: \(photoImageView.center) photoImageView.subview[0].center: \(photoImageView.subviews[0].center)")
         
         //self.view.addSubview(imagieView)
