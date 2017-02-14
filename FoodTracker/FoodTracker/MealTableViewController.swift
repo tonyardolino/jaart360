@@ -12,13 +12,14 @@ import CloudKit
 
 class MealTableViewController: UITableViewController {
     
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     //MARK: Properties
     
     var meals = [Meal]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        activityIndicatorView.startAnimating()
         // Use the edit button item provided by the table view controller.
         navigationItem.leftBarButtonItem = editButtonItem
         
@@ -60,6 +61,9 @@ class MealTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("numberOfRowsInSection \(meals.count)")
+        if(meals.count > 0){
+            activityIndicatorView.stopAnimating()
+        }
         return meals.count
     }
     
